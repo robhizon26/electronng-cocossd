@@ -1,0 +1,42 @@
+<mat-progress-bar *ngIf="!isModelLoaded" mode="indeterminate" color="accent"></mat-progress-bar>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="'navigation'" [mode]="'side'" [opened]="true">
+    <mat-toolbar>Selection</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item routerLink="screencap">Screen Capture</a>
+      <a mat-list-item routerLink="video">Video File</a>
+      <a mat-list-item routerLink="image">Image File</a>
+      <a mat-list-item routerLink="webcam">Webcam</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <span>{{title}}</span>
+    </mat-toolbar>
+    <table style="width:100%;border:1px solid red;">
+      <tr>
+        <td style="width:80%;border:1px solid red;">
+          <router-outlet></router-outlet>
+        </td>
+        <td style="width:80%;border:1px solid red;vertical-align: text-top;">
+          <div style="padding: 10px;">
+            <mat-card class="example-card">
+              <mat-card-content>
+                <div><b>Current Predictions</b></div>
+                <div #current></div>
+              </mat-card-content>
+              <br>
+              <mat-card-content *ngIf="title!='Image File'">
+                <div><b>Highest Count</b></div>
+                <div #all></div>
+              </mat-card-content>
+              <mat-card-actions *ngIf="title!='Image File'">
+                <button mat-raised-button color="accent" (click)="onClearHighestPredictions()">Clear</button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </mat-sidenav-content>
+</mat-sidenav-container>

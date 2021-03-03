@@ -1,0 +1,18 @@
+<mat-progress-bar mode="indeterminate" color="primary" id="progressbar" style="display: none;"></mat-progress-bar>
+<mat-card class="screen-card">
+  <mat-card-content>
+    <div class="subcontainer" #subcontainer>
+      <video class="video" mat-card-image controls muted playsinline crossorigin="anonymous" #vid>
+      </video>
+      <canvas mat-card-image (click)="onPlayOrPause()" #canvas></canvas>
+    </div>
+    <div #videopath></div>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" id="btnforsrc" [disabled]="isloading" (click)="onVideoLoad()">
+        Choose Video File
+      </button>
+    </mat-card-actions>
+  </mat-card-content>
+  <div #modelstatus></div>
+  <div #videostatus></div>
+</mat-card>
