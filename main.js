@@ -11,14 +11,15 @@ function createWindow() {
       enableRemoteModule: true,
     },
   });
-  // win.loadFile(path.join(__dirname, "ngbuild/index.html"));
-  win.loadURL("http://localhost:4200");
-  // win.loadURL(url.format({
-  //   pathname:path.join(__dirname, "ngbuild/index.html"),
-  //   protocol:'file',
-  //   slashes:true
-  // }));
-  win.webContents.openDevTools();
+
+  // win.loadURL("http://localhost:4200"); //<-- use for dev
+  // win.loadFile(path.join(__dirname, "ngbuild/index.html")); //<--alternative for prod
+  win.loadURL(url.format({
+    pathname:path.join(__dirname, "ngbuild/index.html"),
+    protocol:'file',
+    slashes:true
+  }));
+  // win.webContents.openDevTools(); // <-- use for dev
 
   const template = [
     {

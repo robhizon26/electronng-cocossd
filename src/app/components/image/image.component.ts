@@ -102,7 +102,6 @@ export class ImageComponent implements OnInit, OnDestroy, AfterViewInit {
         fs.readFile(filePath, (err, data) => {
           if (err) throw err
           const imgsrc = URL.createObjectURL(new Blob([data]));
-          // const imgsrc = 'data:image/jpeg;base64,' + Buffer.from(data).toString('base64')
           if (this.model) this.onStartDetection(imgsrc, filePath);
         })
       } catch (error) {
