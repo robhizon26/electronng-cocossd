@@ -55,6 +55,7 @@ npm run package-mac
 The different packages for each of these OS platforms will be outputted on `packages` folder.
 
 ## My solution to node_module error
+![](others/node_module_error.png)
 If you encounter this error, this is just my take or work around on how I solved the issue. Please open the file in `node_modules\@tensorflow\tfjs-core\dist\platforms\platform_node.js` and make some minor changes on the code as shown below. I made changes on 2 lines of code.
 ##### **From this code**
 ```
