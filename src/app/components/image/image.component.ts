@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { ElectronLogic, GetModelStatus, ProcessPredictions2 } from "./../../shared/common";
+import { ElectronLogic, ProcessPredictions2 } from "./../../shared/common";
 import { DataSharingService } from './../../shared/datasharing.service';
 import { NotifierService } from "src/app/shared/notifier.service";
 
@@ -11,7 +11,6 @@ import { NotifierService } from "src/app/shared/notifier.service";
 export class ImageComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild("imag", { static: false }) imag: ElementRef<HTMLImageElement>;
   @ViewChild("canvas", { static: false }) canvas: ElementRef<HTMLCanvasElement>;
-  @ViewChild("modelstatus", { static: false }) modelstatusElement: ElementRef<HTMLDivElement>;
   @ViewChild("imagestatus", { static: false }) imagestatusElement: ElementRef<HTMLDivElement>;
   highestcount = [];
   model;
@@ -25,11 +24,9 @@ export class ImageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.modelstatusElement.nativeElement.innerHTML = GetModelStatus('');
     this.DataSharing.Model.subscribe(res => {
       this.model = res;
       if (this.model) {
-        this.modelstatusElement.nativeElement.innerHTML = GetModelStatus('hasLoaded');
         setTimeout(() => {
           this.isloading = false;
         })

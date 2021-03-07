@@ -1,5 +1,5 @@
 <mat-progress-bar mode="indeterminate" color="primary" id="progressbar" style="display: none;"></mat-progress-bar>
-<mat-card class="screen-card">
+<mat-card (mousedown)="$event.stopPropagation()">
   <mat-card-content>
     <img mat-card-image (click)="onImageLoad()" #imag>
     <div #imagestatus></div>
@@ -9,6 +9,5 @@
       </button>
     </mat-card-actions>
   </mat-card-content>
-  <div #modelstatus></div>
 </mat-card>
 <canvas style="display: none;" #canvas></canvas>

@@ -1,1 +1,7 @@
-<app-nav></app-nav>
+<div *ngIf="!isModelLoaded; else main">
+  <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+  <h1>Model is Loading...</h1>
+</div>
+<ng-template #main>
+  <app-nav></app-nav>
+</ng-template>

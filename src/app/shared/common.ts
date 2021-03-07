@@ -1,10 +1,4 @@
 
-export const GetModelStatus = (modelStatus) => {
-  if (modelStatus === "hasLoaded") return "Model has loaded.";
-  if (modelStatus === "cannotLoad") return "Cannot load model.";
-  return "Model is loading...";
-};
-
 export const GetVideoStatus = (videoStatus, type) => {
   if (videoStatus === 'isPaused') return `${type} is paused.`;
   if (videoStatus === 'isPlaying') return `${type} is playing.`;
@@ -76,5 +70,16 @@ export const ProcessPredictions2 = (...args) => {
 
 export const AdjustHeight = (divElement, videoElement, canvasElement) => {
   divElement.setAttribute('style', 'height:' + (videoElement.offsetHeight).toString() + 'px');
-  canvasElement.setAttribute('style', 'height:' + (videoElement.offsetHeight).toString() + 'px');
+  canvasElement.setAttribute('style', 'height:' + (videoElement.offsetHeight - 4).toString() + 'px');
+}
+
+export const CreatePluralMapKVP = (text) => {
+  let apluralmap = text.split('\n')
+  apluralmap = apluralmap.filter(item => item.trim().length > 0 && item.indexOf(',') > -1)
+  let pluralmap: { [Id: string]: string } = {};
+  apluralmap.forEach(sp => {
+    let kvitem = sp.split(',')
+    pluralmap[kvitem[0].trim()] = kvitem[1].trim()
+  })
+  return pluralmap;
 }

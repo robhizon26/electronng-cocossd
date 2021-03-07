@@ -1,12 +1,11 @@
 <mat-progress-bar mode="indeterminate" color="primary" id="progressbar"></mat-progress-bar>
-<mat-card class="screen-card">
+<mat-card (mousedown)="$event.stopPropagation()">
   <mat-card-content>
     <div class="subcontainer" #subcontainer>
       <video class="video" mat-card-image autoPlay muted playsinline crossorigin="anonymous" #vid>
       </video>
       <canvas mat-card-image (click)="onPlayOrPause()" #canvas></canvas>
     </div>
+    <div #videostatus></div>
   </mat-card-content>
-  <div #modelstatus></div>
-  <div #videostatus></div>
 </mat-card>

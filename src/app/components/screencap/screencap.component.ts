@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import * as tf from "@tensorflow/tfjs";
 import { Menu } from 'electron';
 
-import { AdjustHeight, DrawPredictions, ElectronLogic, GetModelStatus, GetVideoStatus } from "../../shared/common";
+import { AdjustHeight, DrawPredictions, ElectronLogic, GetVideoStatus } from "../../shared/common";
 import { DataSharingService } from "../../shared/datasharing.service";
 import { NotifierService } from "src/app/shared/notifier.service";
 
@@ -12,18 +12,15 @@ import { NotifierService } from "src/app/shared/notifier.service";
   styleUrls: ['./screencap.component.scss']
 })
 
-export class ScreencapComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ScreencapComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
   @ViewChild("vid", { static: false }) vid: ElementRef<HTMLVideoElement>;
   @ViewChild("canvas", { static: false }) canvas: ElementRef<HTMLCanvasElement>;
   @ViewChild("subcontainer", { static: false }) subcontainer: ElementRef<HTMLDivElement>;
-  @ViewChild("modelstatus", { static: false }) modelstatusElement: ElementRef<HTMLDivElement>;
   @ViewChild("videostatus", { static: false }) videostatusElement: ElementRef<HTMLDivElement>;
   videoElement: HTMLVideoElement;
   canvasElement: HTMLCanvasElement;
   subcontainerElement: HTMLDivElement;
-
   videoStatus: string = "";
-  modelStatus: string = "";
   model;
   highestcount = [];
   localstream;
@@ -37,7 +34,7 @@ export class ScreencapComponent implements OnInit, OnDestroy, AfterViewInit {
         const { Menu } = ElectronLogic('electron').remote
         this.Menu = Menu
       } catch (error) {
-        throw error
+        this.notifierService.showNotification('Error on Electron.', 'OK', 'error');
       }
     } else {
       console.warn('Logic can only run on Electron.')
@@ -63,27 +60,24 @@ export class ScreencapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  @HostListener('window:resize')
-  onWindowResize() { AdjustHeight(this.subcontainerElement, this.videoElement, this.canvasElement); }
-
   ngAfterViewInit() {
     this.videoElement = this.vid.nativeElement;
     this.canvasElement = this.canvas.nativeElement;
     this.subcontainerElement = this.subcontainer.nativeElement;
-    this.SetModelStatus('')
     this.DataSharing.Model.subscribe(res => {
       this.model = res;
       if (this.model) {
-        this.SetModelStatus('hasLoaded')
         setTimeout(() => {
           this.isloading = false;
         })
       }
     });
-    this.videoElement.onloadeddata = () => {
+    this.videoElement.onloadedmetadata = () => {
       AdjustHeight(this.subcontainerElement, this.videoElement, this.canvasElement);
-      if (this.model) this.onStartDetection();
       this.SetVideoStatus('isReady')
+    };
+    this.videoElement.onloadeddata = () => {
+      if (this.model) this.onStartDetection();
     };
     this.videoElement.onplaying = () => {
       this.SetVideoStatus('isPlaying')
@@ -92,6 +86,9 @@ export class ScreencapComponent implements OnInit, OnDestroy, AfterViewInit {
     const ctx = this.canvasElement.getContext('2d');
     ctx.fillStyle = "#808080aa";
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  }
+
+  ngAfterViewChecked() {
     AdjustHeight(this.subcontainerElement, this.videoElement, this.canvasElement);
   }
 
@@ -109,7 +106,7 @@ export class ScreencapComponent implements OnInit, OnDestroy, AfterViewInit {
         );
         videoOptionsMenu.popup();
       } catch (error) {
-        throw error
+        this.notifierService.showNotification('Error on Electron.', 'OK', 'error');
       }
     } else {
       console.warn('Logic can only run on Electron.')
@@ -142,7 +139,6 @@ export class ScreencapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private onStartDetection() {
     this.highestcount = [];
-    this.SetModelStatus('hasLoaded')
     this.SetVideoStatus('isReady')
     this.detectFrame();
     const ctx = this.canvasElement.getContext('2d');
@@ -169,7 +165,7 @@ export class ScreencapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onPlayOrPause() {
-    if (this.videoStatus === '' || this.modelStatus === '') return;
+    if (this.videoStatus === '') return;
     if (this.videoStatus != 'isPlaying') {
       this.videoElement.play();
       this.SetVideoStatus('isPlaying')
@@ -183,10 +179,5 @@ export class ScreencapComponent implements OnInit, OnDestroy, AfterViewInit {
   private SetVideoStatus(videoStatus) {
     this.videoStatus = videoStatus;
     this.videostatusElement.nativeElement.innerHTML = GetVideoStatus(videoStatus, 'Screen Capture')
-  }
-
-  private SetModelStatus(modelStatus) {
-    this.modelStatus = modelStatus;
-    this.modelstatusElement.nativeElement.innerHTML = GetModelStatus(modelStatus);
   }
 }

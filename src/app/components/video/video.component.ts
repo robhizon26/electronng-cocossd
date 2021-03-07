@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import * as tf from "@tensorflow/tfjs";
 
-import { AdjustHeight, DrawPredictions, ElectronLogic, GetModelStatus, GetVideoStatus } from "./../../shared/common";
+import { AdjustHeight, DrawPredictions, ElectronLogic, GetVideoStatus } from "./../../shared/common";
 import { DataSharingService } from "./../../shared/datasharing.service";
 import { NotifierService } from "src/app/shared/notifier.service";
 
@@ -11,12 +11,11 @@ import { NotifierService } from "src/app/shared/notifier.service";
   styleUrls: ['./video.component.scss']
 })
 
-export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
+export class VideoComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
   @ViewChild("vid", { static: false }) vid: ElementRef<HTMLVideoElement>;
   @ViewChild("src", { static: false }) src: ElementRef<HTMLSourceElement>;
   @ViewChild("canvas", { static: false }) canvas: ElementRef<HTMLCanvasElement>;
   @ViewChild("subcontainer", { static: false }) subcontainer: ElementRef<HTMLDivElement>;
-  @ViewChild("modelstatus", { static: false }) modelstatusElement: ElementRef<HTMLDivElement>;
   @ViewChild("videostatus", { static: false }) videostatusElement: ElementRef<HTMLDivElement>;
   @ViewChild("videopath", { static: false }) videopathElement: ElementRef<HTMLDivElement>;
 
@@ -24,11 +23,11 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
   canvasElement: HTMLCanvasElement;
   subcontainerElement: HTMLDivElement;
   videoStatus: string = "";
-  modelStatus: string = "";
   model;
   highestcount = [];
   filePath;
   isloading: boolean = true;
+  detectionInterval: number = 10;
 
   constructor(private DataSharing: DataSharingService, private notifierService: NotifierService) {
     this.DataSharing.Title.next('Video File');
@@ -49,28 +48,25 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
     this.SetVideoStatus('hasEnded')
   }
 
-  @HostListener('window:resize')
-  onWindowResize() { AdjustHeight(this.subcontainerElement, this.videoElement, this.canvasElement); }
-
   ngAfterViewInit() {
-    this.videoElement = this.vid.nativeElement;
     this.canvasElement = this.canvas.nativeElement;
     this.subcontainerElement = this.subcontainer.nativeElement;
-    this.SetModelStatus('')
     this.SetVideoStatus('')
     this.DataSharing.Model.subscribe(res => {
       this.model = res;
+      this.videoElement = this.vid.nativeElement;
       if (this.model) {
-        this.SetModelStatus('hasLoaded')
         setTimeout(() => {
           this.isloading = false;
-        })
+        }, 0)
       }
     });
-    this.videoElement.onloadeddata = () => {
+    this.videoElement.onloadedmetadata = () => {
       AdjustHeight(this.subcontainerElement, this.videoElement, this.canvasElement);
-      if (this.model) this.onStartDetection();
       this.SetVideoStatus('isReady')
+    };
+    this.videoElement.onloadeddata = () => {
+      if (this.model) this.onStartDetection();
     };
     this.videoElement.onplaying = () => {
       this.SetVideoStatus('isPlaying')
@@ -82,12 +78,14 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
     const ctx = this.canvasElement.getContext('2d');
     ctx.fillStyle = "#808080aa";
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  }
+
+  ngAfterViewChecked() {
     AdjustHeight(this.subcontainerElement, this.videoElement, this.canvasElement);
   }
 
   private onStartDetection() {
     this.highestcount = [];
-    this.SetModelStatus('hasLoaded')
     this.SetVideoStatus('isReady')
     this.detectFrame();
 
@@ -110,7 +108,7 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
           this.DataSharing.UpdatePreditions(predictions, this.highestcount, this.videoStatus);
           tf.engine().endScope();
           if (this.videoStatus === 'isPlaying') requestAnimationFrame(() => this.detectFrame());
-        }, 50);
+        }, this.detectionInterval);
       })
     } catch (error) {
       this.notifierService.showNotification('Error on object detection.', 'OK', 'error');
@@ -118,7 +116,7 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onPlayOrPause() {
-    if (this.videoStatus === '' || this.modelStatus === '') return;
+    if (this.videoStatus === '') return;
     if (this.videoStatus != 'isPlaying') {
       this.videoElement.play();
       this.SetVideoStatus('isPlaying')
@@ -151,16 +149,21 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
         this.SetVideoStatus('hasEnded')
         this.videostatusElement.nativeElement.innerHTML = 'Video is loading...'
         document.getElementById('progressbar').setAttribute('style', 'display:block');
-        const fs = ElectronLogic('fs')
 
-        const file: Buffer = fs.readFileSync(this.filePath);
-        const vidsrc = URL.createObjectURL(new Blob([file]));
-        this.videoElement.src = vidsrc
-        this.videoElement.play();
+        setTimeout(() => {
+          const fs = ElectronLogic('fs')
+          const file: Buffer = fs.readFileSync(this.filePath);
+          const vidsrc = URL.createObjectURL(new Blob([file]));
+          this.videoElement.src = vidsrc
+          this.videoElement.play();
+          this.detectionInterval = file.length / 120000;
+          this.detectionInterval = this.detectionInterval > 300 ? 300 : this.detectionInterval
+          console.log({ detectionInterval: this.detectionInterval })
+        }, 0)
       } catch (error) {
         this.videostatusElement.nativeElement.innerHTML = 'Error on loading video.'
         document.getElementById('progressbar').setAttribute('style', 'display:none');
-        throw error
+        this.notifierService.showNotification('Error on Electron.', 'OK', 'error');
       }
     } else {
       console.warn('Logic can only run on Electron.')
@@ -171,10 +174,5 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit {
   private SetVideoStatus(videoStatus) {
     this.videoStatus = videoStatus;
     this.videostatusElement.nativeElement.innerHTML = GetVideoStatus(videoStatus, 'Video')
-  }
-
-  private SetModelStatus(modelStatus) {
-    this.modelStatus = modelStatus;
-    this.modelstatusElement.nativeElement.innerHTML = GetModelStatus(modelStatus);
   }
 }

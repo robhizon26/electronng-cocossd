@@ -1,7 +1,6 @@
-
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
-@import '~@angular/material/theming';
+@import "~@angular/material/theming";
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
@@ -12,30 +11,41 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$electronng-cocood-primary: mat-palette($mat-indigo);
-$electronng-cocood-accent: mat-palette($mat-pink, A200, A100, A400);
+$electronng-cocossd-primary: mat-palette($mat-indigo);
+$electronng-cocossd-accent: mat-palette($mat-pink, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
-$electronng-cocood-warn: mat-palette($mat-red);
+$electronng-cocossd-warn: mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$electronng-cocood-theme: mat-light-theme($electronng-cocood-primary, $electronng-cocood-accent, $electronng-cocood-warn);
+$electronng-cocossd-theme: mat-light-theme(
+  $electronng-cocossd-primary,
+  $electronng-cocossd-accent,
+  $electronng-cocossd-warn
+);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include angular-material-theme($electronng-cocood-theme);
+@include angular-material-theme($electronng-cocossd-theme);
 
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
-
-.screen-card {
-  margin: 5px!important;
-  padding: 20px!important;
-  border: 1px solid blue;
+.mat-card {
+  margin: 5px !important;
+  padding: 20px !important;
+  padding-right: 23px !important;
+  border: 1px solid rgb(213, 213, 216);
+  cursor: default;
 }
 
 .subcontainer {
@@ -52,12 +62,16 @@ canvas {
   cursor: pointer;
 }
 
-.error.mat-snack-bar-container{
+.error.mat-snack-bar-container {
   background: #bb0000;
   color: white;
 }
 
-.success.mat-snack-bar-container{
+.success.mat-snack-bar-container {
   background: #00cc00;
   color: white;
+}
+
+div {
+  user-select: none;
 }

@@ -41,12 +41,11 @@ yarn-error.log
 testem.log
 /typings
 .gitignore
+reference
 
 # System Files
 .DS_Store
 Thumbs.db
 
 #package
-electronng-cocood-darwin-x64
-electronng-cocood-linux-x64
-electronng-cocood-win32-x64
+packages

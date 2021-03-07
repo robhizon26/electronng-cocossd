@@ -1,6 +1,7 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { AppRoutingModule } from "./app-routing.module";
+import { HttpClientModule } from "@angular/common/http";
 import { AppComponent } from "./app.component";
 import { MaterialModule } from "./material";
 import { NavComponent } from "./nav/nav.component";
@@ -24,6 +25,7 @@ import { NotifierComponent } from "./components/notifier/notifier.component";
     BrowserModule,
     AppRoutingModule,
     MaterialModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent],

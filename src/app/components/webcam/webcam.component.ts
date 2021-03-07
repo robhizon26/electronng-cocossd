@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import * as tf from "@tensorflow/tfjs";
 
-import { AdjustHeight, DrawPredictions, GetModelStatus, GetVideoStatus } from "./../../shared/common";
+import { AdjustHeight, DrawPredictions, GetVideoStatus } from "./../../shared/common";
 import { DataSharingService } from "./../../shared/datasharing.service";
 import { NotifierService } from "src/app/shared/notifier.service";
 
@@ -10,18 +10,16 @@ import { NotifierService } from "src/app/shared/notifier.service";
   templateUrl: "./webcam.component.html",
   styleUrls: ["./webcam.component.scss"],
 })
-export class WebcamComponent implements OnInit, OnDestroy, AfterViewInit {
+export class WebcamComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
   @ViewChild("vid", { static: false }) vid: ElementRef<HTMLVideoElement>;
   @ViewChild("canvas", { static: false }) canvas: ElementRef<HTMLCanvasElement>;
   @ViewChild("subcontainer", { static: false }) subcontainer: ElementRef<HTMLDivElement>;
-  @ViewChild("modelstatus", { static: false }) modelstatusElement: ElementRef<HTMLDivElement>;
   @ViewChild("videostatus", { static: false }) videostatusElement: ElementRef<HTMLDivElement>;
 
   videoElement: HTMLVideoElement;
   canvasElement: HTMLCanvasElement;
   subcontainerElement: HTMLDivElement;
   videoStatus: string = "";
-  modelStatus: string = "";
   model;
   highestcount = [];
   localstream;
@@ -49,15 +47,11 @@ export class WebcamComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  @HostListener('window:resize')
-  onWindowResize() { AdjustHeight(this.subcontainerElement, this.videoElement, this.canvasElement); }
-
   ngAfterViewInit() {
     this.videoElement = this.vid.nativeElement;
     this.canvasElement = this.canvas.nativeElement;
     this.subcontainerElement = this.subcontainer.nativeElement;
     this.SetVideoStatus('')
-    this.SetModelStatus('')
     this.subcontainerElement.setAttribute('style', 'height:' + (this.videoElement.offsetHeight).toString() + 'px');
     this.onEnableCamera();
     const ctx = this.canvasElement.getContext('2d');
@@ -67,20 +61,25 @@ export class WebcamComponent implements OnInit, OnDestroy, AfterViewInit {
     this.DataSharing.Model.subscribe(res => {
       this.model = res;
       if (this.model) {
-        this.SetModelStatus('hasLoaded')
         if (this.videoStatus === 'isReady') this.onStartDetection();
       }
     });
-    this.videoElement.onloadeddata = () => {
+    this.videoElement.onloadedmetadata = () => {
       AdjustHeight(this.subcontainerElement, this.videoElement, this.canvasElement);
       this.SetVideoStatus('isReady')
-      if (this.model) this.onStartDetection();
       document.getElementById('progressbar').setAttribute('style', 'display:none');
+    };
+    this.videoElement.onloadeddata = () => {
+      if (this.model) this.onStartDetection();
     };
     this.videoElement.onplaying = () => {
       this.SetVideoStatus('isPlaying')
       this.detectFrame()
     };
+  }
+
+  ngAfterViewChecked() {
+    AdjustHeight(this.subcontainerElement, this.videoElement, this.canvasElement);
   }
 
   private async onEnableCamera() {
@@ -94,6 +93,7 @@ export class WebcamComponent implements OnInit, OnDestroy, AfterViewInit {
       this.videoElement.play();
     } catch (error) {
       this.SetVideoStatus('webcamError')
+      document.getElementById('progressbar').setAttribute('style', 'display:none');
       this.notifierService.showNotification('Webcam error.', 'OK', 'error');
     }
   }
@@ -101,7 +101,6 @@ export class WebcamComponent implements OnInit, OnDestroy, AfterViewInit {
   private onStartDetection() {
     this.highestcount = [];
     this.SetVideoStatus('isPlaying')
-    this.SetModelStatus('hasLoaded')
     this.detectFrame()
     const ctx = this.canvasElement.getContext('2d');
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -123,12 +122,12 @@ export class WebcamComponent implements OnInit, OnDestroy, AfterViewInit {
         }, 50);
       })
     } catch (error) {
-      alert(error + ' : Error on object detection')
+      this.notifierService.showNotification('Error on object detection.', 'OK', 'error');
     }
   }
 
   onPlayOrPause() {
-    if (this.videoStatus === '' || this.modelStatus === '') return;
+    if (this.videoStatus === '') return;
     if (this.videoStatus != 'isPlaying') {
       this.videoElement.play();
       this.SetVideoStatus('isPlaying')
@@ -142,10 +141,5 @@ export class WebcamComponent implements OnInit, OnDestroy, AfterViewInit {
   private SetVideoStatus(videoStatus) {
     this.videoStatus = videoStatus;
     this.videostatusElement.nativeElement.innerHTML = GetVideoStatus(videoStatus, 'Webcam')
-  }
-
-  private SetModelStatus(modelStatus) {
-    this.modelStatus = modelStatus;
-    this.modelstatusElement.nativeElement.innerHTML = GetModelStatus(modelStatus);
   }
 }

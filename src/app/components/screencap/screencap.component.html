@@ -1,13 +1,13 @@
-<mat-card class="screen-card">
+<mat-card (mousedown)="$event.stopPropagation()">
   <mat-card-content>
     <div class="subcontainer" #subcontainer>
       <video class="video" mat-card-image id="videoid_screencap" #vid></video>
       <canvas mat-card-image (click)="onPlayOrPause()" #canvas></canvas>
     </div>
     <mat-card-actions>
-      <button mat-raised-button color="primary" id="screencapsources" (click)="onGetVideoSources()" [disabled]="isloading" >Choose Video Source</button>
+      <button mat-raised-button color="primary" id="screencapsources" (click)="onGetVideoSources()"
+        [disabled]="isloading">Choose Video Source</button>
     </mat-card-actions>
+    <div #videostatus></div>
   </mat-card-content>
-  <div #modelstatus></div>
-  <div #videostatus></div>
 </mat-card>
