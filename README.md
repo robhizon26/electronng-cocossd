@@ -58,85 +58,9 @@ The different packages for each of these OS platforms will be outputted on `pack
 ![](others/node_module_error.png)
 If you encounter this error, this is just my take or work around on how I solved the issue. Please open the file in `node_modules\@tensorflow\tfjs-core\dist\platforms\platform_node.js` and make some minor changes on the code as shown below. I made changes on 2 lines of code.
 ##### **From this code**
-```
-...
-export class PlatformNode {
-    constructor() {
-        // tslint:disable-next-line:no-require-imports
-        this.util = require('util');
-        // According to the spec, the built-in encoder can do only UTF-8 encoding.
-        // https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder/TextEncoder
-        this.textEncoder = new this.util.TextEncoder();
-    }
-    fetch(path, requestInits) {
-        if (env().global.fetch != null) {
-            return env().global.fetch(path, requestInits);
-        }
-        if (systemFetch == null) {
-            systemFetch = getNodeFetch.importFetch();
-        }
-        return systemFetch(path, requestInits);
-    }
-    now() {
-        const time = process.hrtime();
-        return time[0] * 1000 + time[1] / 1000000;
-    }
-    encode(text, encoding) {
-        if (encoding !== 'utf-8' && encoding !== 'utf8') {
-            throw new Error(`Node built-in encoder only supports utf-8, but got ${encoding}`);
-        }
-        return this.textEncoder.encode(text);
-    }
-    decode(bytes, encoding) {
-        if (bytes.length === 0) {
-            return '';
-        }
-        return new this.util.TextDecoder(encoding).decode(bytes);
-    }
-}
-...
-```
+![](others/FromThisCode.png)
 ##### **To this code**
-```
-...
-export class PlatformNode {
-    constructor() {
-        // tslint:disable-next-line:no-require-imports
-        this.util = require('util');
-        // According to the spec, the built-in encoder can do only UTF-8 encoding.
-        // https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder/TextEncoder
-        // this.textEncoder = new this.util.TextEncoder();
-      }
-      fetch(path, requestInits) {
-        if (env().global.fetch != null) {
-          return env().global.fetch(path, requestInits);
-        }
-        if (systemFetch == null) {
-          systemFetch = getNodeFetch.importFetch();
-        }
-        return systemFetch(path, requestInits);
-      }
-      now() {
-        const time = process.hrtime();
-        return time[0] * 1000 + time[1] / 1000000;
-      }
-      encode(text, encoding) {
-        if (encoding !== 'utf-8' && encoding !== 'utf8') {
-          throw new Error(`Node built-in encoder only supports utf-8, but got ${encoding}`);
-        }
-        this.textEncoder = new this.util.TextEncoder();
-        return this.textEncoder.encode(text);
-      }
-      decode(bytes, encoding) {
-        if (bytes.length === 0) {
-          return '';
-        }
-        return new this.util.TextDecoder(encoding).decode(bytes);
-    }
-}
-...
-```
-
+![](others/ToThisCode.png)
 ## Description of the app
 This object detection app is made from Electron so it can run as a desktop app in all three major OS platforms, that is Windows, Linux and Mac.  
 
