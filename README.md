@@ -9,9 +9,9 @@ The title stands for:
 ## How to run the app
 Run `npm install` on the terminal to install all required dependencies.
 
-Run `npm run electron-aot` to optimize building the Angular app using AOT(Ahead-Of-Time) compiler, and dumping the web files(index.html, js files, css, pluralmap.csv, etc) on `ngbuild` folder. I changed the build folder to `ngbuild` on angular.json. After this, it will run Electron as a desktop app. 
+Run `npm run electron-aot` to optimize building the Angular app using AOT(Ahead-Of-Time) compiler, and dumping the transpiled web files (index.html, JS files, CSS, pluralmap.csv, etc) on `ngbuild` folder. It will first run CLI command `ng build --prod`. I changed the build folder from `dist` to `ngbuild` on angular.json. After this, it will run the Electron CLI command `electron .` to open the desktop app. 
 
-Please see package.json how I summarized CLI commands.
+##### **Please see package.json how I summarized CLI commands.**
 ```
   "scripts": {
     "ng": "ng",
@@ -30,9 +30,9 @@ Please see package.json how I summarized CLI commands.
 ```
 
 ## How to run the app in development and debugging mode
-You can run the Angular app using the default `ng serve` and see it on the browser on `http://localhost:4200/` but all Electron/NodeJS logic will not be executed. If you just need to check on Angular Material or anything related to aesthetics this is just fine. 
+You can run the Angular app using the default `ng serve` to spin off the internal dev server and see it on the browser on `http://localhost:4200/`. Here, all Electron/NodeJS logic will not be executed. If you just need to check on Angular Material or anything related to aesthetics this is just fine. 
 
-Or you can also do debugging by going to the `main.js`, an Electron entry point, and change the `dev` variable to `true`. Then run `npm run electron`. This will run the Electron dekstop app and will display `http://localhost:4200/`. Everything you changed and saved on the Angular code will be updated immediately on the Electron app as if it was the browser.  
+Or you can also do debugging by going to the `main.js`, an Electron entry point, and change the `dev` variable to `true`. Then run `npm run electron`. This will run the Electron dekstop app and will display `http://localhost:4200/`. Everything you changed and saved on the Angular source files will be reloaded and updated immediately on the Electron app as if it was the browser.  
 
 ## How to package Electron as a standlone app
 I summarize the commands on package.json on how to package the app as distributables. You could certainly add mode parameters to these as you want. Please refer to [Electron packager tutorial](https://www.christianengvall.se/electron-packager-tutorial/) and 
@@ -75,29 +75,3 @@ if (ElectronLogic) {
   //Do Node JS file system
 }
 ```
-
-
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.22.
-
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
