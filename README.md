@@ -4,7 +4,11 @@ The title stands for:
 * NG stands for [Angular](https://angular.io/). This project also uses [Angular Material](https://material.angular.io/). These are the framework used to create the contents of the web app.
 * COCO-SSD is the model used for obtect detection. [COCO](https://cocodataset.org/#home) stands for `Common Object in Context` and SSD stands for `Single Shot (Multibox) Detection`. The model used here is a [Tensorflow.js](https://www.tensorflow.org/js/models) port of [COCO-SSD model](https://github.com/tensorflow/tfjs-models/tree/master/coco-ssd). 
 
-
+![](others/WalkingTour.gif)
+![](others/office_ezgif.gif)
+![](others/videomeeting_ezgif.gif)
+![](others/stretching_ezgif.gif)
+![](others/kinder.png)
 
 ## How to run the app
 Run `npm install` on the terminal to install all required dependencies.
