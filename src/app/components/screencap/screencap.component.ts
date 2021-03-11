@@ -4,7 +4,7 @@ import { Menu } from 'electron';
 
 import { AdjustHeight, DrawPredictions, ElectronLogic, GetVideoStatus } from "../../shared/common";
 import { DataSharingService } from "../../shared/datasharing.service";
-import { NotifierService } from "src/app/shared/notifier.service";
+import { NotifierService } from "../../shared/notifier.service";
 
 @Component({
   selector: 'app-screencap',

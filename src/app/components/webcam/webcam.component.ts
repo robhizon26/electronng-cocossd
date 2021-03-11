@@ -3,7 +3,7 @@ import * as tf from "@tensorflow/tfjs";
 
 import { AdjustHeight, DrawPredictions, GetVideoStatus } from "./../../shared/common";
 import { DataSharingService } from "./../../shared/datasharing.service";
-import { NotifierService } from "src/app/shared/notifier.service";
+import { NotifierService } from "./../../shared/notifier.service";
 
 @Component({
   selector: "app-webcam",

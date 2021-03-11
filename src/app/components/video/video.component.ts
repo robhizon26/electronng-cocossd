@@ -3,7 +3,7 @@ import * as tf from "@tensorflow/tfjs";
 
 import { AdjustHeight, DrawPredictions, ElectronLogic, GetVideoStatus } from "./../../shared/common";
 import { DataSharingService } from "./../../shared/datasharing.service";
-import { NotifierService } from "src/app/shared/notifier.service";
+import { NotifierService } from "./../../shared/notifier.service";
 
 @Component({
   selector: 'app-video',
@@ -13,7 +13,6 @@ import { NotifierService } from "src/app/shared/notifier.service";
 
 export class VideoComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
   @ViewChild("vid", { static: false }) vid: ElementRef<HTMLVideoElement>;
-  @ViewChild("src", { static: false }) src: ElementRef<HTMLSourceElement>;
   @ViewChild("canvas", { static: false }) canvas: ElementRef<HTMLCanvasElement>;
   @ViewChild("subcontainer", { static: false }) subcontainer: ElementRef<HTMLDivElement>;
   @ViewChild("videostatus", { static: false }) videostatusElement: ElementRef<HTMLDivElement>;

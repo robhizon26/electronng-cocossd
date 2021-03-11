@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { ElectronLogic, ProcessPredictions2 } from "./../../shared/common";
 import { DataSharingService } from './../../shared/datasharing.service';
-import { NotifierService } from "src/app/shared/notifier.service";
+import { NotifierService } from "./../../shared/notifier.service";
 
 @Component({
   selector: "app-image",
