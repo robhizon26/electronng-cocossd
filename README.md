@@ -5,6 +5,8 @@ The title stands for:
 * COCO-SSD is the model used for obtect detection. [COCO](https://cocodataset.org/#home) stands for `Common Object in Context` and SSD stands for `Single Shot (Multibox) Detection`. The model used here is a [Tensorflow.js](https://www.tensorflow.org/js/models) port of [COCO-SSD model](https://github.com/tensorflow/tfjs-models/tree/master/coco-ssd). 
 
 ![](others/WalkingTour.gif)
+>*You can observe that the bounding boxes on the gif video above lags when people or cars are moving fast or the camera is panning hastily. I recorded the file above using a 7-year old laptop. The performance of object detection would increase dramatically if you run the app in a high-end and  high-performing desktop machine. Also, having a lower resolution on your video file or screen capture would also mean lesser processing time for inference testing and better performance on object detection predictions.*
+
 ![](others/office_ezgif.gif)
 ![](others/videomeeting_ezgif.gif)
 ![](others/stretching_ezgif.gif)
@@ -50,7 +52,7 @@ npm run package-linux
 ```
 npm run package-win
 ```
->There is a different procedure on how to package a Windows distributable on non-Windows platforms. You should see this [reference](https://github.com/electron/electron-packager#building-windows-apps-from-non-windows-platforms).
+>*There is a different procedure on how to package a Windows distributable on non-Windows platforms. You should see this [reference](https://github.com/electron/electron-packager#building-windows-apps-from-non-windows-platforms).*
 
 ##### **Mac**
 ```
