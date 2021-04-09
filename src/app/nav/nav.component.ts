@@ -74,18 +74,11 @@ export class NavComponent implements OnInit, AfterViewInit {
   onMouseDown(e) {
     this.isMouseDown = true;
     this.fullPanelWidth = this.rightpane.nativeElement.offsetWidth + this.middlepane.nativeElement.offsetWidth;
-    // console.log('this.rightpane', this.rightpane.nativeElement.offsetWidth)
-    // console.log('this.middlepane', this.middlepane.nativeElement.offsetWidth)
   }
   onMouseMove(e) {
     const x = e.clientX - 150
-    // console.log('this.fullPanelWidth', this.fullPanelWidth)
-    // console.log('e.clientX-150', e.clientX - 150)
-    // console.log('Math.abs(this.fullPanelWidth - e.clientX-150)', Math.abs(this.fullPanelWidth - (e.clientX - 150)))
-    if (Math.abs(this.fullPanelWidth - x) < 50) this.isMouseDown = false;
-    if (Math.abs(x) < 50) this.isMouseDown = false;
     if (!this.isMouseDown) return;
-    this.rightpane.nativeElement.setAttribute('style', `width:${100 - (x / this.fullPanelWidth) * 100}%;border:1px solid rgb(0, 0, 255);vertical-align:top;`);
-    this.middlepane.nativeElement.setAttribute('style', `width:${(x / this.fullPanelWidth) * 100}%;border:1px solid rgb(0, 0, 255);vertical-align:top;`);
+    this.rightpane.nativeElement.style.width = `${100 - (x / this.fullPanelWidth) * 100}%`
+    this.middlepane.nativeElement.style.width = `${(x / this.fullPanelWidth) * 100}%`
   }
 }

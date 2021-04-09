@@ -69,8 +69,8 @@ export const ProcessPredictions2 = (...args) => {
 }
 
 export const AdjustHeight = (divElement, videoElement, canvasElement) => {
-  divElement.setAttribute('style', 'height:' + (videoElement.offsetHeight).toString() + 'px');
-  canvasElement.setAttribute('style', 'height:' + (videoElement.offsetHeight - 4).toString() + 'px');
+  divElement.style.height =  (videoElement.offsetHeight).toString() + 'px'
+  canvasElement.style.height =  (videoElement.offsetHeight - 4).toString() + 'px'
 }
 
 export const CreatePluralMapKVP = (text) => {

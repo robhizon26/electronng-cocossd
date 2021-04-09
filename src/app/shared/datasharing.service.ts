@@ -10,7 +10,6 @@ export class DataSharingService {
   ClearPredictions = new BehaviorSubject([]);
   Title = new BehaviorSubject('');
   Model = new BehaviorSubject(undefined);
-  ResizeDetect = new BehaviorSubject(undefined);
   constructor() {
   }
 

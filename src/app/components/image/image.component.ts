@@ -48,7 +48,7 @@ export class ImageComponent implements OnInit, OnDestroy, AfterViewInit {
     img1.crossOrigin = "anonymous";
     img1.onload = async () => {
       this.imagestatusElement.nativeElement.innerHTML = '<b>Image path:</b> <i>' + filePath + '</i>'
-      document.getElementById('progressbar').setAttribute('style', 'display:none');
+      document.getElementById('progressbar').style.display = 'none'
       const btnforsrc = document.getElementById('btnforsrc');
       let pathParts = filePath.split("\\");
       const name = pathParts[pathParts.length - 1];
@@ -73,7 +73,7 @@ export class ImageComponent implements OnInit, OnDestroy, AfterViewInit {
       const xfact = ctx.canvas.width / img1.width;
       const yfact = ctx.canvas.height / img1.height;
       ProcessPredictions2(predictions, ctx, xfact, yfact, textHeight)
-      canvas.setAttribute('style', 'height:' + (canvas.offsetHeight + 1).toString() + 'px');
+      canvas.style.height = (canvas.offsetHeight + 1).toString() + 'px'
       img0.src = canvas.toDataURL();
       canvas.remove()
     }
@@ -94,7 +94,7 @@ export class ImageComponent implements OnInit, OnDestroy, AfterViewInit {
         const filePath = (await dialog.showOpenDialog(win, options)).filePaths[0]
         if (!filePath) return
         this.imagestatusElement.nativeElement.innerHTML = 'Image is loading...'
-        document.getElementById('progressbar').setAttribute('style', 'display:block');
+        document.getElementById('progressbar').style.display = 'block'
         const fs = ElectronLogic('fs')
         fs.readFile(filePath, (err, data) => {
           if (err) throw err
@@ -103,7 +103,7 @@ export class ImageComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       } catch (error) {
         this.imagestatusElement.nativeElement.innerHTML = 'Error on loading image.'
-        document.getElementById('progressbar').setAttribute('style', 'display:none');
+        document.getElementById('progressbar').style.display = 'none'
         this.notifierService.showNotification('Error on loading image.', 'OK', 'error');
       }
     } else {

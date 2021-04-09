@@ -52,7 +52,7 @@ export class WebcamComponent implements OnInit, OnDestroy, AfterViewInit, AfterV
     this.canvasElement = this.canvas.nativeElement;
     this.subcontainerElement = this.subcontainer.nativeElement;
     this.SetVideoStatus('')
-    this.subcontainerElement.setAttribute('style', 'height:' + (this.videoElement.offsetHeight).toString() + 'px');
+    this.subcontainerElement.style.height = (this.videoElement.offsetHeight).toString() + 'px'
     this.onEnableCamera();
     const ctx = this.canvasElement.getContext('2d');
     ctx.fillStyle = "#808080aa";
@@ -67,7 +67,7 @@ export class WebcamComponent implements OnInit, OnDestroy, AfterViewInit, AfterV
     this.videoElement.onloadedmetadata = () => {
       AdjustHeight(this.subcontainerElement, this.videoElement, this.canvasElement);
       this.SetVideoStatus('isReady')
-      document.getElementById('progressbar').setAttribute('style', 'display:none');
+      document.getElementById('progressbar').style.display = 'none'
     };
     this.videoElement.onloadeddata = () => {
       if (this.model) this.onStartDetection();
@@ -93,7 +93,7 @@ export class WebcamComponent implements OnInit, OnDestroy, AfterViewInit, AfterV
       this.videoElement.play();
     } catch (error) {
       this.SetVideoStatus('webcamError')
-      document.getElementById('progressbar').setAttribute('style', 'display:none');
+      document.getElementById('progressbar').style.display = 'none'
       this.notifierService.showNotification('Webcam error.', 'OK', 'error');
     }
   }

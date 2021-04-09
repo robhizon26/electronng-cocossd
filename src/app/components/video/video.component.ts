@@ -89,7 +89,7 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
     this.detectFrame();
 
     this.videopathElement.nativeElement.innerHTML = '<b>Video path: </b> <i>' + this.filePath + '</i>'
-    document.getElementById('progressbar').setAttribute('style', 'display:none');
+    document.getElementById('progressbar').style.display = 'none'
     const btnforsrc = document.getElementById('btnforsrc');
     let pathParts = this.filePath.split("\\");
     const name = pathParts[pathParts.length - 1];
@@ -147,7 +147,7 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         this.SetVideoStatus('hasEnded')
         this.videostatusElement.nativeElement.innerHTML = 'Video is loading...'
-        document.getElementById('progressbar').setAttribute('style', 'display:block');
+        document.getElementById('progressbar').style.display='block'
 
         setTimeout(() => {
           const fs = ElectronLogic('fs')
@@ -161,7 +161,7 @@ export class VideoComponent implements OnInit, OnDestroy, AfterViewInit, AfterVi
         }, 0)
       } catch (error) {
         this.videostatusElement.nativeElement.innerHTML = 'Error on loading video.'
-        document.getElementById('progressbar').setAttribute('style', 'display:none');
+        document.getElementById('progressbar').style.display='none'
         this.notifierService.showNotification('Error on Electron.', 'OK', 'error');
       }
     } else {

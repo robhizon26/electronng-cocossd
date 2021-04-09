@@ -14,14 +14,15 @@
     </mat-toolbar>
     <table style="width:100%;border:1px solid red;" cellspacing="0" cellpadding="0">
       <tr>
-        <td style="width:80%;border:1px solid rgb(0, 0, 255);vertical-align: top;" #middlepane>
-          <div style="cursor:ew-resize;padding-right: 3px;" (mousedown)="onMouseDown($event)">
+        <td style="width:80%;" #middlepane>
+          <div>
             <router-outlet></router-outlet>
           </div>
         </td>
-        <td style="border:1px solid rgb(0, 0, 255);vertical-align: top;" #rightpane>
-          <div style="cursor:ew-resize;padding-left:3px;" (mousedown)="onMouseDown($event)">
-            <mat-card class="example-card" (mousedown)="$event.stopPropagation()">
+        <td style="width:5px;min-width:5px;cursor:ew-resize;" (mousedown)="onMouseDown($event)"></td>
+        <td  #rightpane>
+          <div>
+            <mat-card class="example-card">
               <mat-card-content>
                 <div><b>Current Predictions</b></div>
                 <div #current></div>
