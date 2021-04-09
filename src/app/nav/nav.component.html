@@ -8,35 +8,31 @@
       <a mat-list-item routerLink="webcam">Webcam</a>
     </mat-nav-list>
   </mat-sidenav>
-  <mat-sidenav-content (mouseup)="isMouseDown=false" (mousemove)="onMouseMove($event)">
+  <mat-sidenav-content (mouseup)="isMouseDown=false" (mousemove)="onMouseMove($event)" (mouseup)="isMouseDown=false">
     <mat-toolbar color="primary">
       <span>{{title}}</span>
     </mat-toolbar>
     <table cellspacing="0" cellpadding="0">
       <tr>
         <td style="width:80%;" #middlepane>
-          <div>
-            <router-outlet></router-outlet>
-          </div>
+          <router-outlet></router-outlet>
         </td>
         <td style="width:5px;min-width:5px;cursor:ew-resize;" (mousedown)="onMouseDown($event)"></td>
         <td #rightpane>
-          <div>
-            <mat-card class="example-card">
-              <mat-card-content>
-                <div><b>Current Predictions</b></div>
-                <div #current></div>
-              </mat-card-content>
-              <br>
-              <mat-card-content *ngIf="title!='Image File'">
-                <div><b>Highest Count</b></div>
-                <div #all></div>
-              </mat-card-content>
-              <mat-card-actions *ngIf="title!='Image File'">
-                <button mat-raised-button color="accent" (click)="onClearHighestPredictions()">Clear</button>
-              </mat-card-actions>
-            </mat-card>
-          </div>
+          <mat-card class="example-card">
+            <mat-card-content>
+              <div><b>Current Predictions</b></div>
+              <div #current></div>
+            </mat-card-content>
+            <br>
+            <mat-card-content *ngIf="title!='Image File'">
+              <div><b>Highest Count</b></div>
+              <div #all></div>
+            </mat-card-content>
+            <mat-card-actions *ngIf="title!='Image File'">
+              <button mat-raised-button color="accent" (click)="onClearHighestPredictions()">Clear</button>
+            </mat-card-actions>
+          </mat-card>
         </td>
       </tr>
     </table>
