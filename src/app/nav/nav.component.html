@@ -12,7 +12,7 @@
     <mat-toolbar color="primary">
       <span>{{title}}</span>
     </mat-toolbar>
-    <table style="width:100%;border:1px solid red;" cellspacing="0" cellpadding="0">
+    <table cellspacing="0" cellpadding="0">
       <tr>
         <td style="width:80%;" #middlepane>
           <div>
@@ -20,7 +20,7 @@
           </div>
         </td>
         <td style="width:5px;min-width:5px;cursor:ew-resize;" (mousedown)="onMouseDown($event)"></td>
-        <td  #rightpane>
+        <td #rightpane>
           <div>
             <mat-card class="example-card">
               <mat-card-content>
